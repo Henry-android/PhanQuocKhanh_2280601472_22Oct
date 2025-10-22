@@ -48,7 +48,12 @@ router.post(
   uploadMultiFilesWithField("files"),
   function (req, res, next) {
     try {
+      console.log("📁 Upload Multiple - Request received");
+      console.log("📁 Files count:", req.files ? req.files.length : 0);
+      console.log("📁 User:", req.userId);
+
       if (!req.files || req.files.length === 0) {
+        console.log("❌ No files uploaded");
         return Response(
           res,
           400,
@@ -58,6 +63,7 @@ router.post(
       }
 
       let fileData = req.files.map(function (file) {
+        console.log("📁 Processing file:", file.filename);
         return {
           filename: file.filename,
           originalName: file.originalname,
@@ -70,8 +76,10 @@ router.post(
         };
       });
 
+      console.log("✅ Upload successful, files:", fileData.length);
       Response(res, 200, true, fileData);
     } catch (error) {
+      console.error("❌ Upload error:", error);
       Response(res, 500, false, error.message);
     }
   }
